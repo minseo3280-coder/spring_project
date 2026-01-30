@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Guardian - 로그인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #3B82F6;
+            --primary-light: #EFF6FF;
+            --primary-dark: #1E40AF;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --danger-red: #EF4444;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border-light: #E5E7EB;
+            --bg-white: #FFFFFF;
+            --bg-gray: #F9FAFB;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--bg-gray);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .mobile-frame {
+            width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: var(--bg-white);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .notch {
+            height: 44px;
+            background: var(--bg-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .app-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* ============ 로그인 화면 ============ */
+        .login-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--bg-white) 100%);
+            overflow-y: auto;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-icon {
+            font-size: 60px;
+            margin-bottom: 12px;
+        }
+
+        .login-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .login-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .login-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .login-btn:active {
+            transform: scale(0.97);
+        }
+
+        .kakao-login-btn {
+            background: #FFE812;
+            color: #333333;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .kakao-login-btn:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .google-login-btn {
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .google-login-btn:hover {
+            background: var(--bg-gray);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-icon {
+            font-size: 18px;
+        }
+
+        .btn-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .btn-main {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-sub {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .login-footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .login-footer-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .login-footer-highlight {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #DCFCE7 0%, #F0FDF4 100%);
+            border-radius: 20px;
+            font-size: 11px;
+            color: var(--success-green);
+            font-weight: 600;
+            margin-top: 16px;
+        }
+
+        .security-badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* ============ 메인 앱 화면 (처음엔 숨김) ============ */
+        .main-app {
+            display: none;
+        }
+
+        .main-app.show {
+            display: flex;
+        }
+
+        .screen {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #2563EB 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .stat-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .menu-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-card:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .menu-icon.blue {
+            background: var(--primary-light);
+            color: var(--primary-blue);
+        }
+
+        .menu-icon.green {
+            background: #DCFCE7;
+            color: var(--success-green);
+        }
+
+        .menu-icon.orange {
+            background: #FEF3C7;
+            color: var(--warning-orange);
+        }
+
+        .menu-icon.red {
+            background: #FEE2E2;
+            color: var(--danger-red);
+        }
+
+        .menu-content {
+            flex: 1;
+        }
+
+        .menu-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .menu-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .menu-arrow {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+
+
+        .report-list {
+            padding: 16px;
+        }
+
+        .report-item {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .report-item:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+
+        .report-thumbnail {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .report-info {
+            flex: 1;
+        }
+
+        .report-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .report-meta {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .report-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #FEF3C7;
+            color: var(--warning-orange);
+        }
+
+        .status-complete {
+            background: #DCFCE7;
+            color: var(--success-green);
+        }
+
+        .status-rejected {
+            background: #FEE2E2;
+            color: var(--danger-red);
+        }
+
+        .analytics-section {
+            padding: 16px;
+        }
+
+        .analytics-card {
+            background: linear-gradient(135deg, var(--primary-light) 0%, #F0F9FF 100%);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .analytics-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .chart-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            align-items: flex-end;
+            height: 80px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--primary-blue) 0%, #2563EB 100%);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 20px;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding-top: 8px;
+            padding-bottom: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 10px;
+            width: 60px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #2563EB 100%);
+            color: white;
+            width: calc(100% - 32px);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding-top: 8px;
+            padding-bottom: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 10px;
+            width: 60px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .report-list {
+            padding: 16px;
+        }
+
+        .report-item {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .report-item:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+
+        .report-thumbnail {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .report-info {
+            flex: 1;
+        }
+
+        .report-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .report-meta {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .report-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status-complete {
+            background: #DCFCE7;
+            color: var(--success-green);
+        }
+
+        .status-pending {
+            background: #FEF3C7;
+            color: var(--warning-orange);
+        }
+
+        .status-rejected {
+            background: #FEE2E2;
+            color: var(--danger-red);
+        }
+
+        .analytics-section {
+            padding: 16px;
+        }
+
+        /* 🤖 챗봇 스타일 */
+        .chatbot-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .chat-bubble.assistant {
+            background: var(--primary-light);
+            color: var(--text-primary);
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        .chat-bubble.user {
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .chat-input-area {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-white);
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .chat-input-field {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 13px;
+            resize: none;
+            font-family: inherit;
+            max-height: 100px;
+        }
+
+        .chat-input-field:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .chat-send-btn {
+            padding: 10px 12px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+        }
+
+        .chat-send-btn:hover:not(:disabled) {
+            background: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .suggestions-container {
+            padding: 12px 16px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .suggestion-btn {
+            padding: 10px 12px;
+            background: var(--bg-gray);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .suggestion-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-blue);
+        }
+
+        .analytics-card {
+            background: linear-gradient(135deg, var(--primary-light) 0%, #F0F9FF 100%);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .analytics-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+
+        .chart-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            align-items: flex-end;
+            height: 80px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--primary-blue) 0%, #2563EB 100%);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 20px;
+        }
+
+
+        .bar-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 24px;
+            width: 90%;
+            max-width: 320px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-cancel {
+            background: var(--bg-gray);
+            color: var(--text-primary);
+        }
+
+        .modal-btn-confirm {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .badge-blue {
+            background: var(--primary-light);
+            color: var(--primary-blue);
+        }
+
+        .badge-green {
+            background: #DCFCE7;
+            color: var(--success-green);
+        }
+
+        .screen::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .screen::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 3px;
+        }
+
+        .screen::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+
+        @media (max-width: 768px) {
+            .mobile-frame {
+                width: 100%;
+                border-radius: 0;
+                height: 100vh;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <!-- 상단 노치 -->
+        <div class="notch">
+            <span>9:41</span>
+            <span style="text-align: right;">100%</span>
+        </div>
+
+        <!-- 앱 콘텐츠 -->
+        <div class="app-content">
+            <!-- ========== 로그인 화면 ========== -->
+            <div id="loginPage" class="login-screen">
+                <div class="login-container">
+                    <div class="login-header">
+                        <div class="login-icon">🚗</div>
+                        <div class="login-title">Road Guardian</div>
+                        <div class="login-subtitle">
+                            도로교통법 전문<br>
+                            AI 챗봇
+                        </div>
+                    </div>
+
+                    <div class="login-buttons">
+                        <button class="login-btn kakao-login-btn" onclick="handleKakaoLogin()">
+                            <span class="btn-icon">💛</span>
+                            <span class="btn-text">
+                                <span class="btn-main">카톡으로 로그인</span>
+                                <span class="btn-sub">카카오톡 계정 사용</span>
+                            </span>
+                        </button>
+
+                        <button class="login-btn google-login-btn" onclick="handleGoogleLogin()">
+                            <span class="btn-icon">🔍</span>
+                            <span class="btn-text">
+                                <span class="btn-main">Google로 로그인</span>
+                                <span class="btn-sub">구글 계정 사용</span>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="security-badge">
+                        <div class="security-badge-dot"></div>
+                        <span>보안 연결</span>
+                    </div>
+
+                    <div class="login-footer">
+                        <div class="login-footer-text">
+                            로그인하면 <span class="login-footer-highlight">신고 관리</span>,<br>
+                            <span class="login-footer-highlight">AI 법률 상담</span>를<br>
+                            한 계정으로 이용할 수 있습니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ========== 메인 앱 (처음엔 숨김) ========== -->
+            <div id="mainApp" class="main-app">
+                <!-- 1. 홈 화면 -->
+                <div class="screen active" id="screen-home">
+                    <div class="header">
+                        <h1>🚗 Road Guardian</h1>
+                        <p>도로교통법 전문 AI 챗봇</p>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">신고 접수</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">완료</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">진행중</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">85.5</div>
+                            <div class="stat-label">안전 점수</div>
+                        </div>
+                    </div>
+
+                    <div style="padding: 0 16px; margin-top: 8px;">
+                        <button class="btn btn-primary" onclick="switchScreen('chatbot')">
+                            💬 법률 상담 시작
+                        </button>
+                    </div>
+                </div>
+
+
+
+                <!-- 2. 신고 화면 -->
+                <div class="screen" id="screen-report">
+                    <div class="header">
+                        <h1>신고 관리</h1>
+                        <p>내 신고 목록</p>
+                    </div>
+
+                    <div
+                        style="padding: 16px; background: var(--primary-light); border-radius: 16px; margin: 16px; border: 1px solid var(--border-light);">
+                        <div style="display: flex; gap: 12px;">
+                            <span style="font-size: 20px;">📋</span>
+                            <div>
+                                <div
+                                    style="font-size: 13px; font-weight: 600; color: var(--primary-blue); margin-bottom: 2px;">
+                                    신고 자동 작성</div>
+                                <div style="font-size: 11px; color: var(--text-secondary);">AI 챗봇의 법률 상담을 받고 신고서를 자동
+                                    작성하세요.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-list">
+                        <div class="report-item" onclick="switchScreen('detail')">
+                            <div class="report-thumbnail">📸</div>
+                            <div class="report-info">
+                                <div class="report-title">신호 위반</div>
+                                <div class="report-meta">2026-02-12 14:32 | 123456</div>
+                                <span class="report-status status-complete">완료</span>
+                            </div>
+                        </div>
+
+                        <div class="report-item" onclick="switchScreen('detail')">
+                            <div class="report-thumbnail">📸</div>
+                            <div class="report-info">
+                                <div class="report-title">중앙선 침범</div>
+                                <div class="report-meta">2026-02-12 13:15 | 345678</div>
+                                <span class="report-status status-pending">진행중</span>
+                            </div>
+                        </div>
+
+                        <div class="report-item" onclick="switchScreen('detail')">
+                            <div class="report-thumbnail">📸</div>
+                            <div class="report-info">
+                                <div class="report-title">속도 초과</div>
+                                <div class="report-meta">2026-02-12 11:45 | 567890</div>
+                                <span class="report-status status-complete">완료</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="switchScreen('chatbot')">💬 법률 상담</button>
+                </div>
+
+                <!-- 3. 신고 상세 -->
+                <div class="screen" id="screen-detail">
+                    <div class="header">
+                        <h1>신고 상세</h1>
+                        <p>신호 위반</p>
+                    </div>
+
+                    <div class="report-list">
+                        <div style="padding: 0;">
+                            <div
+                                style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); height: 150px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 40px; margin: 16px;">
+                                📸
+                            </div>
+                        </div>
+
+                        <div style="padding: 16px;">
+                            <div
+                                style="font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                위반 내용</div>
+                            <div
+                                style="padding: 12px; background: var(--bg-gray); border-radius: 12px; font-size: 13px; line-height: 1.6; color: var(--text-primary);">
+                                도로교통법 제 149조를 위반하여 신호를 무시하고 진입했습니다.
+                            </div>
+                        </div>
+
+                        <div style="padding: 16px;">
+                            <div
+                                style="font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                위치</div>
+                            <div
+                                style="padding: 12px; background: var(--bg-gray); border-radius: 12px; font-size: 13px; color: var(--text-primary);">
+                                강남역 3번 출구 교차로 | 37.5665°N, 126.9981°E
+                            </div>
+                        </div>
+
+                        <div style="padding: 16px;">
+                            <div
+                                style="font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                신고 일시</div>
+                            <div
+                                style="padding: 12px; background: var(--bg-gray); border-radius: 12px; font-size: 13px; color: var(--text-primary);">
+                                2024-01-20 14:32:15
+                            </div>
+                        </div>
+
+                        <div style="padding: 16px;">
+                            <div
+                                style="font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                신고 ID</div>
+                            <div
+                                style="padding: 12px; background: var(--bg-gray); border-radius: 12px; font-size: 13px; color: var(--text-primary);">
+                                123456 | G70
+                            </div>
+                        </div>
+
+                        <div style="padding: 16px;">
+                            <div
+                                style="font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                예상 범칙금</div>
+                            <div
+                                style="padding: 12px; background: var(--bg-gray); border-radius: 12px; font-size: 13px; color: var(--text-primary);">
+                                도로교통법 제 149조<br>신호 위반: 60,000원
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="showModal('confirm')">신고 제출</button>
+                        <button class="btn"
+                            style="background: var(--bg-gray); color: var(--text-primary); width: calc(100% - 32px);"
+                            onclick="switchScreen('report')">뒤로</button>
+                    </div>
+                </div>
+
+                <!-- 4. 🤖 챗봇 화면 (전문 RAG 챗봇) -->
+                <div class="screen" id="screen-chatbot">
+                    <div class="header">
+                        <h1>💬 도로법 전문 상담</h1>
+                        <p>AI 챗봇과 대화하기</p>
+                    </div>
+
+                    <div class="chatbot-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-message">
+                                <div class="chat-bubble assistant">
+                                    👋 안녕하세요! 저는 대한민국 도로교통법 전문 AI 챗봇입니다.<br><br>
+                                    신호 위반, 중앙선 침범, 과속, 음주운전 등 도로법 관련 질문에 정확한 답변을 제공해드립니다.<br><br>
+                                    어떤 도로법 질문이 있으신가요?
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="suggestionsContainer" class="suggestions-container">
+                            <button class="suggestion-btn" onclick="sendSuggestion('신호를 무시하고 진입하면 벌금이 얼마인가요?')">🚦 신호 위반
+                                벌금</button>
+                            <button class="suggestion-btn" onclick="sendSuggestion('중앙선을 침범하면 어떤 처벌을 받나요?')">🟡 중앙선
+                                침범</button>
+                            <button class="suggestion-btn" onclick="sendSuggestion('음주운전이 적발되면 벌금과 처벌이 어떻게 되나요?')">🍺
+                                음주운전</button>
+                            <button class="suggestion-btn" onclick="sendSuggestion('과속이 얼마 이상이면 벌금을 받나요?')">⚡ 속도
+                                초과</button>
+                        </div>
+
+                        <div class="chat-input-area">
+                            <textarea id="chatInput" class="chat-input-field" placeholder="질문을 입력하세요..." rows="1"
+                                onkeypress="handleKeyPress(event)"></textarea>
+                            <button id="chatSendBtn" class="chat-send-btn" onclick="sendMessage()" title="전송">
+                                📤
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. 도로법 전문 챗봇 화면 -->
+                <div class="screen" id="screen-chatbot-qa">
+                    <div class="header">
+                        <h1>💬 도로법 전문 상담</h1>
+                        <p>도로교통법 AI 챗봇</p>
+                    </div>
+
+                    <div class="chatbot-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-message">
+                                <div class="chat-bubble assistant">
+                                    👋 안녕하세요! 저는 대한민국 도로교통법 전문 AI 챗봇입니다.<br><br>
+                                    신호 위반, 중앙선 침범, 과속, 음주운전 등 도로법 관련 질문에 정확한 답변을 제공해드립니다.<br><br>
+                                    어떤 도로법 질문이 있으신가요?
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="suggestionsContainer" class="suggestions-container">
+                            <button class="suggestion-btn" onclick="sendSuggestion('신호를 무시하고 진입하면 벌금이 얼마인가요?')">🚦 신호 위반
+                                벌금</button>
+                            <button class="suggestion-btn" onclick="sendSuggestion('중앙선을 침범하면 어떤 처벌을 받나요?')">🟡 중앙선
+                                침범</button>
+                            <button class="suggestion-btn" onclick="sendSuggestion('음주운전이 적발되면 벌금과 처벌이 어떻게 되나요?')">🍺
+                                음주운전</button>
+                            <button class="suggestion-btn" onclick="sendSuggestion('과속이 얼마 이상이면 벌금을 받나요?')">⚡ 속도
+                                초과</button>
+                        </div>
+
+                        <div class="chat-input-area">
+                            <textarea id="chatInput" class="chat-input-field" placeholder="질문을 입력하세요..." rows="1"
+                                onkeypress="handleKeyPress(event)"></textarea>
+                            <button id="chatSendBtn" class="chat-send-btn" onclick="sendMessage()" title="전송">
+                                📤
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. 정보 화면 -->
+                <div class="screen" id="screen-about">
+                    <div class="header">
+                        <h1>ℹ️ 정보</h1>
+                        <p>Road Guardian</p>
+                    </div>
+
+                    <div style="padding: 16px;">
+                        <div class="analytics-card"
+                            style="background: linear-gradient(135deg, var(--primary-light) 0%, #F0F9FF 100%);">
+                            <div
+                                style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                🚀 주요 기능
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+                                도로교통법 전문 AI 챗봇. RAG 기반 정확한 법률 정보 제공과 LLM을 활용한 지능형 신고 시스템.
+                            </div>
+                        </div>
+
+                        <div class="analytics-card"
+                            style="background: linear-gradient(135deg, #DCFCE7 0%, #F0FDF4 100%);">
+                            <div
+                                style="font-size: 14px; font-weight: 600; color: var(--success-green); margin-bottom: 8px;">
+                                ✨ 특징
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.8;">
+                                1. 도로교통법 전문 AI 상담<br>
+                                2. RAG 기반 정확한 정보<br>
+                                3. 실시간 신고 시스템<br>
+                                4. 자동 위치 기록 및 분석
+                            </div>
+                        </div>
+
+                        <div class="menu-card" onclick="switchScreen('chatbot')">
+                            <div class="menu-icon blue">💬</div>
+                            <div class="menu-content">
+                                <div class="menu-title">법률 상담</div>
+                                <div class="menu-desc">AI 챗봇과 대화하기</div>
+                            </div>
+                            <div class="menu-arrow">›</div>
+                        </div>
+
+                        <div class="menu-card" onclick="switchScreen('report')">
+                            <div class="menu-icon orange">📋</div>
+                            <div class="menu-content">
+                                <div class="menu-title">신고 관리</div>
+                                <div class="menu-desc">신고 목록 보기</div>
+                            </div>
+                            <div class="menu-arrow">›</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. 고객센터 화면 -->
+                <div class="screen" id="screen-support">
+                    <div class="header">
+                        <h1>💬 고객센터</h1>
+                        <p>지원 및 문의</p>
+                    </div>
+
+                    <div style="padding: 16px;">
+                        <div class="analytics-card"
+                            style="background: linear-gradient(135deg, var(--primary-light) 0%, #F0F9FF 100%);">
+                            <div
+                                style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">
+                                📞 지원 정보
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.8;">
+                                <strong>이메일:</strong> support@roadguardian.com<br>
+                                <strong>전화:</strong> 1234-5678<br>
+                                <strong>운영시간:</strong> 평일 09:00-18:00
+                            </div>
+                        </div>
+
+                        <div class="menu-card" onclick="switchScreen('chatbot')">
+                            <div class="menu-icon blue">💬</div>
+                            <div class="menu-content">
+                                <div class="menu-title">챗봇 상담</div>
+                                <div class="menu-desc">AI 법률 상담 바로가기</div>
+                            </div>
+                            <div class="menu-arrow">›</div>
+                        </div>
+
+                        <div class="menu-card" onclick="openNotices()">
+                            <div class="menu-icon orange">📢</div>
+                            <div class="menu-content">
+                                <div class="menu-title">공지사항</div>
+                                <div class="menu-desc">시스템 업데이트 안내</div>
+                            </div>
+                            <div class="menu-arrow">›</div>
+                        </div>
+
+                        <div class="menu-card" onclick="openFAQ()">
+                            <div class="menu-icon green">❓</div>
+                            <div class="menu-content">
+                                <div class="menu-title">FAQ</div>
+                                <div class="menu-desc">자주 묻는 질문</div>
+                            </div>
+                            <div class="menu-arrow">›</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="handleLogout()">로그아웃</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 하단 네비게이션 -->
+        <div id="bottomNav" class="bottom-nav" style="display: none;">
+            <div class="nav-item active" onclick="switchScreen('home')">
+                <div class="nav-icon">🏠</div>
+                <span>홈</span>
+            </div>
+            <div class="nav-item" onclick="switchScreen('report')">
+                <div class="nav-icon">📋</div>
+                <span>신고</span>
+            </div>
+            <div class="nav-item" onclick="switchScreen('chatbot')">
+                <div class="nav-icon">💬</div>
+                <span>상담</span>
+            </div>
+            <div class="nav-item" onclick="switchScreen('about')">
+                <div class="nav-icon">ℹ️</div>
+                <span>정보</span>
+            </div>
+            <div class="nav-item" onclick="switchScreen('support')">
+                <div class="nav-icon">🆘</div>
+                <span>지원</span>
+            </div>
+        </div>
+
+        <!-- 모달 -->
+        <div class="modal" id="modal-confirm">
+            <div class="modal-content">
+                <div class="modal-title">신고 제출</div>
+                <div class="modal-desc">이 신고를 제출하시겠습니까? 제출 후 변경할 수 없습니다.</div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-cancel" onclick="closeModal()">취소</button>
+                    <button class="modal-btn modal-btn-confirm" onclick="submitReport()">제출</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 2026-01-28 로그인 수정 신민서
+        // ⚙️ API 설정
+        // app.py가 5001포트에서 실행 중이므로 base URL을 맞춥니다.
+        const API_BASE_URL = 'http://localhost:5001'; // 같은 도메인/포트 사용 시 빈 문자열 권장, 분리 시 'http://localhost:5000'
+
+        let chatHistory = [];
+
+        // 🚀 초기화 및 세션 확인 (페이지 로드 시 실행)
+        window.addEventListener('load', async () => {
+            console.log('✅ Road Guardian 앱 초기화');
+
+            // 1. URL에 에러가 있는지 확인 (로그인 실패 시 리다이렉트 된 경우)
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('error')) {
+                alert(`로그인 오류: ${params.get('error')}`);
+                window.history.replaceState({}, document.title, '/'); // URL 청소
+            }
+
+            // 2. 백엔드에 로그인 상태 체크 요청
+            await checkLoginStatus();
+        });
+
+        // 🔐 로그인 상태 확인 함수
+        async function checkLoginStatus() {
+            try {
+                // app.py의 /api/auth/check 라우트 호출 
+                const response = await fetch('/api/auth/check');
+                const data = await response.json();
+
+                if (data.authenticated) {
+                    console.log('로그인 성공:', data.user);
+                    // 로그인 되어있으면 메인 앱 표시 및 유저 정보 업데이트
+                    updateUserInfo(data.user);
+                    showMainApp();
+                } else {
+                    console.log('비로그인 상태');
+                    // 로그인 안되어있으면 로그인 페이지 유지
+                    document.getElementById('loginPage').style.display = 'flex';
+                    document.getElementById('mainApp').classList.remove('show');
+                }
+            } catch (error) {
+                console.error('세션 확인 실패:', error);
+            }
+        }
+
+        // 👤 UI 업데이트 (유저 정보 반영)
+        function updateUserInfo(user) {
+            // 예: 헤더나 프로필 섹션에 사용자 이름 표시
+            // 현재 HTML 구조상 헤더 텍스트를 변경하는 예시입니다.
+            const headerTitle = document.querySelector('#screen-home .header p');
+            if (headerTitle) headerTitle.textContent = `${user.nickname}님, 안전운전 하세요!`;
+
+            // 필요하다면 프로필 이미지 등을 업데이트하는 로직 추가
+        }
+
+        // 💛 카카오 로그인 (실제 백엔드 연동)
+        function handleKakaoLogin() {
+            // app.py에 정의된 카카오 로그인 라우트로 브라우저 이동 
+            window.location.href = '/auth/kakao/login';
+        }
+
+        // 🔓 구글 로그인 (추후 구현 필요 시 유사하게 처리)
+        function handleGoogleLogin() {
+            alert('구글 로그인은 아직 준비 중입니다.');
+        }
+
+        // 🚪 로그아웃
+        async function handleLogout() {
+            if (!confirm('로그아웃 하시겠습니까?')) return;
+
+            try {
+                // app.py의 로그아웃 라우트 호출 
+                const response = await fetch('/auth/logout', { method: 'POST' });
+                const data = await response.json();
+
+                if (data.success) {
+                    location.reload(); // 페이지 새로고침하여 로그인 화면으로 복귀
+                }
+            } catch (error) {
+                console.error('로그아웃 오류:', error);
+                alert('로그아웃 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 🏠 메인 앱 표시 (로그인 성공 시 호출됨)
+        function showMainApp() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainApp').classList.add('show');
+            document.getElementById('bottomNav').style.display = 'flex';
+            switchScreen('home');
+        }
+
+        // 🖱️ 화면 전환 (기존 코드 유지)
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            const targetScreen = document.getElementById(`screen-${screenId}`);
+            if (targetScreen) targetScreen.classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            const navMap = {
+                'home': 0,
+                'report': 1,
+                'chatbot': 2,
+                'about': 3,
+                'support': 4
+            };
+
+            if (navMap.hasOwnProperty(screenId)) {
+                const navItems = document.querySelectorAll('.nav-item');
+                if (navItems[navMap[screenId]]) {
+                    navItems[navMap[screenId]].classList.add('active');
+                }
+            }
+        }
+        // 2026-01-28 로그인 수정 신민서
+
+        // 🔔 모달 제어
+        function showModal(modalId) {
+            document.getElementById(`modal-${modalId}`).classList.add('active');
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        // 📋 신고 제출
+        function submitReport() {
+            alert('✅ 신고가 제출되었습니다!\n신고 ID: RG-2024-001234\n처리 예상 시간: 3-5일');
+            closeModal();
+            switchScreen('report');
+        }
+
+        // 👂 모달 백그라운드 클릭
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+        });
+
+        // 📢 공지사항 오픈
+        function openNotices() {
+            alert('📢 공지사항\n\n[2024-01-20] 서비스 안정화 업데이트\n- AI 챗봇 응답 속도 개선\n- 신고 시스템 보안 강화\n\n[2024-01-15] 새로운 기능 추가\n- 도로법 전문 챗봇 오픈\n- 실시간 신고 분석 기능');
+        }
+
+        // ❓ FAQ 오픈
+        function openFAQ() {
+            alert('❓ 자주 묻는 질문\n\nQ1. 챗봇은 언제 사용 가능한가요?\n→ 24시간 이용 가능합니다.\n\nQ2. 신고는 안전한가요?\n→ 모든 데이터는 암호화되어 저장됩니다.\n\nQ3. 신고 반려 시 재신청 가능한가요?\n→ 네, 수정 후 재신청 가능합니다.');
+        }
+
+        // 초기화
+        window.addEventListener('load', () => {
+            console.log('✅ Road Guardian 챗봇 초기화 완료');
+            console.log(`📡 API 서버: ${API_BASE_URL}`);
+        });
+    </script>
+</body>
+
+</html>
